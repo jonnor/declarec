@@ -8,7 +8,6 @@ generateEnum = (name, prefix, enums) ->
     out = "enum " + name + " {";
     a = []
     for e, val of enums
-        
         v = if (val != null) then " = " + val else ""
         a.push (indent + prefix + e + v)
     out += a.join ","
@@ -46,7 +45,17 @@ generateDefinition = (name, def) ->
 startsWith = (str, sub) ->
     return (str.indexOf(sub) == 0)
 
-extractDef = (content) ->
+
+
+extractDef = (content, marker, lang) ->
+    lang = 'c' if not lang
+    marker = 'declarec' if not marker
+
+    isStart = (line) -> false
+    isEnd = (line) -> false
+    if lang is 'c'
+        isStart = (line) -> startsWith line, "/* #{marker}"
+        isEnd = (line) -> startsWith line, "#{marker} */"
     
     definitions = []
     startIdx = null
@@ -56,14 +65,12 @@ extractDef = (content) ->
 
         if startIdx == null
             # Look for start
-            if startsWith line, '/* declarec'
-                startIdx = idx
+            startIdx = idx if isStart line
         if endIdx == null
             # Look for end
-            if startsWith line, 'declarec */'
-                endIdx = idx
-
+            endIdx = idx if isEnd line
         if startIdx != null and endIdx != null
+            # Definition section complete
             l = lines.splice startIdx+1, endIdx-2
             d = JSON.parse l.join '\n'
             definitions.push d
@@ -80,18 +87,19 @@ main = () ->
 
     filename = process.argv[2]
     ext = path.extname filename
+    contents = fs.readFileSync filename, {'encoding': 'utf8'}
 
     defs = null
     if ext == '.json'
-        defs = JSON.parse fs.readFileSync filename
+        defs = JSON.parse contents
     else if ext in ['.cpp', '.c']
-        defs = extractDef fs.readFileSync filename, {'encoding': 'utf8'}
+        defs = extractDef contents, null, 'c'
     else if ext in ['.yml', '.yaml']
-        defs = yaml.eval fs.readFileSync filename, {'encoding': 'utf8'}
+        defs = yaml.eval contents
 
     for def in defs
         console.log generateEnum def.name, def.name, def.values
         console.log generateStringMap def.name+'_names', def.values
 
 exports.main = main
-
+exports.extractDefinition = extractDef
