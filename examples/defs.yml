@@ -1,0 +1,7 @@
+-
+  name: MyEnum
+  type: enum
+  values:
+    First: 0
+    Second: null
+    Third: null

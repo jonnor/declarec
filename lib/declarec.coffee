@@ -76,6 +76,7 @@ main = () ->
 
     fs = require 'fs'
     path = require 'path'
+    yaml = require 'yaml'
 
     filename = process.argv[2]
     ext = path.extname filename
@@ -85,6 +86,8 @@ main = () ->
         defs = JSON.parse fs.readFileSync filename
     else if ext in ['.cpp', '.c']
         defs = extractDef fs.readFileSync filename, {'encoding': 'utf8'}
+    else if ext in ['.yml', '.yaml']
+        defs = yaml.eval fs.readFileSync filename, {'encoding': 'utf8'}
 
     for def in defs
         console.log generateEnum def.name, def.name, def.values
