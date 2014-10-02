@@ -43,15 +43,52 @@ generateDefinition = (name, def) ->
     return r
 ###
 
+startsWith = (str, sub) ->
+    return (str.indexOf(sub) == 0)
+
+extractDef = (content) ->
+    
+    definitions = []
+    startIdx = null
+    endIdx = null
+    lines = content.split '\n'
+    lines.forEach (line, idx) ->
+
+        if startIdx == null
+            # Look for start
+            if startsWith line, '/* declarec'
+                startIdx = idx
+        if endIdx == null
+            # Look for end
+            if startsWith line, 'declarec */'
+                endIdx = idx
+
+        if startIdx != null and endIdx != null
+            l = lines.splice startIdx+1, endIdx-2
+            d = JSON.parse l.join '\n'
+            definitions.push d
+            startIdx = null
+            endIdx = null
+
+    return definitions
+
 main = () ->
 
     fs = require 'fs'
+    path = require 'path'
 
     filename = process.argv[2]
-    console.log filename
+    ext = path.extname filename
 
-    defs = JSON.parse fs.readFileSync filename
+    defs = null
+    if ext == '.json'
+        defs = JSON.parse fs.readFileSync filename
+    else if ext in ['.cpp', '.c']
+        defs = extractDef fs.readFileSync filename, {'encoding': 'utf8'}
+
     for def in defs
         console.log generateEnum def.name, def.name, def.values
+        console.log generateStringMap def.name+'_names', def.values
 
 exports.main = main
+
