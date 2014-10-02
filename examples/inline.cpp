@@ -1,5 +1,5 @@
 
-/* declarec mydefs.h
+/* declarec json mydefs.h
 {
     "type": "enum",
     "name": "MyEnum",

@@ -71,8 +71,15 @@ extractDef = (content, marker, lang) ->
             endIdx = idx if isEnd line
         if startIdx != null and endIdx != null
             # Definition section complete
+            startLine = lines[startIdx]
+            tok = startLine.split ' '
             l = lines.splice startIdx+1, endIdx-2
-            d = JSON.parse l.join '\n'
+            d =
+                marker: tok[1]
+                content: l.join '\n'
+            # Optional
+            d.format = tok[2] if tok.length > 1
+            d.target = tok[3] if tok.length > 2 
             definitions.push d
             startIdx = null
             endIdx = null
@@ -94,6 +101,7 @@ main = () ->
         defs = JSON.parse contents
     else if ext in ['.cpp', '.c']
         defs = extractDef contents, null, 'c'
+        defs = (JSON.parse d.content for d in defs)
     else if ext in ['.yml', '.yaml']
         defs = yaml.eval contents
 
