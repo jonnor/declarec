@@ -1,0 +1,12 @@
+[
+    {
+        "type": "enum",
+        "name": "MyEnum",
+        "values": {
+            "First": 0,
+            "Second": null,
+            "Third": null
+        }
+
+    }
+]
