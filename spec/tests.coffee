@@ -1,4 +1,5 @@
 chai = require 'chai'
+declarec = require '../lib/declarec'
 
 run = (example, callback) ->
     child_process = require 'child_process'
@@ -46,5 +47,9 @@ describe 'Hello World example', () ->
                 chai.expect(err).to.be.a 'null'
                 chai.expect(result).to.equal expected
                 done()
-
-
+        it 'should extract filename', (done) ->
+            p = require('path').join __dirname, '../examples/', 'inline.cpp'
+            declarec.definitionsFromFile p, (err, defs) ->
+                chai.expect(err).to.be.a 'null'
+                chai.expect(defs[0].target).to.equal 'mydefs.h'
+                done()

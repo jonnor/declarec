@@ -86,28 +86,34 @@ extractDef = (content, marker, lang) ->
 
     return definitions
 
-main = () ->
-
+definitionsFromFile = (filename, callback) ->
     fs = require 'fs'
     path = require 'path'
     yaml = require 'yaml'
 
-    filename = process.argv[2]
     ext = path.extname filename
-    contents = fs.readFileSync filename, {'encoding': 'utf8'}
+    fs.readFile filename, {'encoding': 'utf8'}, (err, contents) ->
+        return callback err, null if err
+        defs = null
+        if ext == '.json'
+            defs = JSON.parse contents
+        else if ext in ['.cpp', '.c']
+            raw = extractDef contents, null, 'c'
+            defs = (JSON.parse d.content for d in raw)
+            for idx in [0...raw.length]
+                defs[idx].target = raw[idx].target if raw[idx].target
+                defs[idx].format = raw[idx].format if raw[idx].format
+        else if ext in ['.yml', '.yaml']
+            defs = yaml.eval contents
+        return callback new Error "Unsupported file type #{ext}", defs if not defs
+        return callback null, defs
 
-    defs = null
-    if ext == '.json'
-        defs = JSON.parse contents
-    else if ext in ['.cpp', '.c']
-        defs = extractDef contents, null, 'c'
-        defs = (JSON.parse d.content for d in defs)
-    else if ext in ['.yml', '.yaml']
-        defs = yaml.eval contents
-
-    for def in defs
-        console.log generateEnum def.name, def.name, def.values
-        console.log generateStringMap def.name+'_names', def.values
+main = () ->
+    definitionsFromFile process.argv[2], (err, defs) ->
+        for def in defs
+            console.log generateEnum def.name, def.name, def.values
+            console.log generateStringMap def.name+'_names', def.values
 
 exports.main = main
 exports.extractDefinition = extractDef
+exports.definitionsFromFile = definitionsFromFile
