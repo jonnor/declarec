@@ -1,8 +1,11 @@
 {
   "name": "declarec",
-  "version": "0.3.2",
+  "version": "0.0.1",
   "description": "Generate C/C++ from .json declarations",
   "keywords": [
+    "C",
+    "C++",
+    "DSL",
     "microcontroller",
     "embedded systems"
   ],
@@ -19,7 +22,7 @@
     "declarec": "./bin/declarec"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "mocha --compilers coffee:coffee-script/register spec/*.coffee"
   },
   "engines": {
     "node": ">=0.10.0"
@@ -42,11 +45,5 @@
     "grunt-contrib-uglify": "~0.2.0",
     "grunt-mocha-phantomjs": "~0.2.2",
     "mocha": "~1.20.0"
-  },
-  "noflo": {
-    "loader": "nodejs/ComponentLoader.coffee",
-    "components": {
-      "MicroFloComponent": "nodejs/MicroFloComponent"
-    }
   }
 }
