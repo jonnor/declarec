@@ -22,7 +22,7 @@
     "declarec": "./bin/declarec"
   },
   "scripts": {
-    "test": "mocha --compilers coffee:coffee-script/register spec/*.coffee"
+    "test": "mocha --compilers coffee:coffee-script/register --reporter spec spec/*.coffee"
   },
   "engines": {
     "node": ">=0.10.0"
