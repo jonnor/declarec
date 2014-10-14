@@ -41,7 +41,7 @@ describe 'Hello World example', () ->
                 chai.expect(err).to.be.a 'null'
                 chai.expect(result).to.equal expected
                 done()
-    describe 'declared in .cpp comment', () ->
+    describe 'json declared in .cpp comment', () ->
         it 'should generate enum and names', (done) ->
             run 'inline.cpp', (err, result) ->
                 chai.expect(err).to.be.a 'null'
@@ -52,4 +52,16 @@ describe 'Hello World example', () ->
             declarec.definitionsFromFile p, (err, defs) ->
                 chai.expect(err).to.be.a 'null'
                 chai.expect(defs[0].target).to.equal 'mydefs.h'
+                done()
+    describe 'yaml declared in .cpp comment', () ->
+        it 'should generate enum and names', (done) ->
+            run 'inline-yaml.cpp', (err, result) ->
+                chai.expect(err).to.be.a 'null'
+                chai.expect(result).to.equal expected
+                done()
+        it 'should extract filename', (done) ->
+            p = require('path').join __dirname, '../examples/', 'inline-yaml.cpp'
+            declarec.definitionsFromFile p, (err, defs) ->
+                chai.expect(err).to.be.a 'null'
+                chai.expect(defs[0].target).to.equal 'mydefsyaml.h'
                 done()

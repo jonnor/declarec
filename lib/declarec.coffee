@@ -99,8 +99,11 @@ definitionsFromFile = (filename, callback) ->
             defs = JSON.parse contents
         else if ext in ['.cpp', '.c']
             raw = extractDef contents, null, 'c'
-            defs = (JSON.parse d.content for d in raw)
+            defs = ({} for r in raw)
             for idx in [0...raw.length]
+                r = raw[idx]
+                defs[idx] = JSON.parse r.content if r.format == 'json'
+                defs[idx] = (yaml.eval r.content)[0] if r.format == 'yaml'
                 defs[idx].target = raw[idx].target if raw[idx].target
                 defs[idx].format = raw[idx].format if raw[idx].format
         else if ext in ['.yml', '.yaml']
