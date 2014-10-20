@@ -36,7 +36,7 @@ generateStringMap = (mapname, values, extract) ->
     for idx in [firstIdx..lastIdx]
         s = numericToString[idx]
         delim = if idx == lastIdx then "\n" else ",\n"
-        item = if s then "\"#{s}\"#{delim}" else "NULL#{delim}"
+        item = if s then "\"#{s}\"#{delim}" else "0#{delim}"
         r += indent+item
 
     r+= "};\n"
