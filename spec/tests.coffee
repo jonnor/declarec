@@ -16,14 +16,14 @@ describe 'Hello World example', () ->
     """
     enum MyEnum {
         MyEnumFirst = 0,
-        MyEnumSecond,
-        MyEnumThird
+        MyEnumSecond = 1,
+        MyEnumThird = 2
     };
 
     static const char *MyEnum_names[] = {
         "First",
         "Second",
-        "Third",
+        "Third"
     };
 
 

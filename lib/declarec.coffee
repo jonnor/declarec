@@ -21,12 +21,23 @@ generateInitial = (name, def) ->
     return 'const FinitoStateId ' + name + " = " + nameToId(def.initial.state, def.states) + ";\n"
 ###
 
-generateStringMap = (mapname, values) ->
+generateStringMap = (mapname, values, extract) ->
     indent = "    "
+    firstIdx = 0
+    lastIdx = -1
+    numericToString = {}
+    for k, v of values
+        val = if extract then extract values, k else v
+        firstIdx = val if val < firstIdx
+        lastIdx = val if val > lastIdx
+        numericToString[val] = k
+
     r = "static const char *#{mapname}[] = {\n"
-    for name, val of values
-        r += indent+"\"#{name}\",\n"
-    r.trim ","
+    for idx in [firstIdx..lastIdx]
+        s = numericToString[idx]
+        delim = if idx == lastIdx then "\n" else ",\n"
+        item = if s then "\"#{s}\"#{delim}" else "NULL#{delim}"
+        r += indent+item
 
     r+= "};\n"
     return r
@@ -86,6 +97,15 @@ extractDef = (content, marker, lang) ->
 
     return definitions
 
+
+normalizeEnum = (values) ->
+    out = {}
+    lastVal = 0
+    for k, val of values
+        lastVal = if val == null then lastVal+1 else val
+        out[k] = lastVal
+    return out
+
 definitionsFromFile = (filename, callback) ->
     fs = require 'fs'
     path = require 'path'
@@ -114,8 +134,8 @@ definitionsFromFile = (filename, callback) ->
 main = () ->
     definitionsFromFile process.argv[2], (err, defs) ->
         for def in defs
-            console.log generateEnum def.name, def.name, def.values
-            console.log generateStringMap def.name+'_names', def.values
+            console.log generateEnum def.name, def.name, normalizeEnum def.values
+            console.log generateStringMap def.name+'_names', normalizeEnum def.values
 
 exports.main = main
 exports.extractDefinition = extractDef
