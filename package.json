@@ -1,6 +1,6 @@
 {
   "name": "declarec",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Generate C/C++ from .json declarations",
   "keywords": [
     "C",
