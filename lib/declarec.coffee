@@ -120,3 +120,5 @@ main = () ->
 exports.main = main
 exports.extractDefinition = extractDef
 exports.definitionsFromFile = definitionsFromFile
+exports.generateStringMap = generateStringMap
+exports.generateEnum = generateEnum
