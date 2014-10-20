@@ -83,8 +83,10 @@ extractDef = (content, marker, lang) ->
         if startIdx != null and endIdx != null
             # Definition section complete
             startLine = lines[startIdx]
+            endLine = lines[endIdx]
             tok = startLine.split ' '
-            l = lines.splice startIdx+1, endIdx-2
+            n = (endIdx-startIdx)-1
+            l = lines.splice startIdx+1, n
             d =
                 marker: tok[1]
                 content: l.join '\n'
