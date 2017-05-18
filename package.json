@@ -17,23 +17,23 @@
   "bugs": "http://github.com/jonnor/declarec/issues",
   "homepage": "http://github.com/jonnor/declarec",
   "license": "MIT",
-  "main": "./lib/declarec",
+  "main": "./lib/declarec.js",
   "bin": {
     "declarec": "./bin/declarec"
   },
   "scripts": {
-    "test": "mocha --compilers coffee:coffee-script/register --reporter spec spec/*.coffee"
+    "test": "./node_modules/.bin/coffee -o dist -c lib/declarec.coffee && mocha --compilers coffee:coffee-script/register --reporter spec spec/*.coffee"
   },
   "engines": {
     "node": ">=0.10.0"
   },
   "dependencies": {
-    "coffee-script": "^1.7.1",
     "commander": "~2.1.0",
     "yaml": "^0.2.3"
   },
   "devDependencies": {
     "chai": "~1.8.0",
+    "coffee-script": "^1.7.1",
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.7",
     "grunt-contrib-clean": "^0.5.0",
