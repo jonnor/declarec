@@ -1,5 +1,5 @@
 chai = require 'chai'
-declarec = require '../lib/declarec'
+declarec = require '../'
 
 run = (example, callback) ->
     child_process = require 'child_process'
