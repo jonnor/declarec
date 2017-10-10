@@ -5,6 +5,7 @@ sudo: false
 deploy:
   provider: npm
   email: jononor@gmail.com
+  skip_cleanup: true
   api_key:
     secure: lz4IuqZZC2ns2E4iEosGSvnt0zntMCT9UznPT3tG+ZJFSw0PYUrY+y3K6Mzw+kcTVOTAC6A8KIG6l1kdi3QuNvvsxy2uYXlNzLjxUHzf92impAOEgfEysN+nRVG980P7+0BZ/YZXtCcxsjBWAH1S7UPCTBvqUt3sX6Q5bypCENg=
   on:
